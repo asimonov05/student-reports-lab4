@@ -73,4 +73,4 @@ bash tests/gui-test.sh
 - [Исходное ТЗ в Word](docs/source/ТЗлаб4.docx) и [его текст](docs/source/specification.txt).
 - [Общее задание ЛР № 4](https://github.com/dmieter/os-labs/blob/main/labs-2026/lab-4/README.md) и [описание данных ЛР № 3](https://github.com/dmieter/os-labs/blob/main/labs-2026/lab3/README.md).
 
-В Linux пройдены 62 проверки вычислений и 12 проверок диалоговых сценариев. Условия запуска, результаты на исходной базе и ограничения проверки графического интерфейса перечислены в отчёте о тестировании. Для повторных запусков в GitHub настроен workflow [Bash tests](.github/workflows/test.yml).
+В Linux пройдены 62 проверки вычислений и 13 проверок диалоговых сценариев. Условия запуска, результаты на исходной базе и ограничения проверки графического интерфейса перечислены в отчёте о тестировании. Для повторных запусков в GitHub настроен workflow [Bash tests](.github/workflows/test.yml).

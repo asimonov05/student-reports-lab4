@@ -77,4 +77,4 @@ bash tests/gui-test.sh
 
 ## Повторная проверка в GitHub
 
-Workflow `.github/workflows/test.yml` настроен на push и pull request, использует Ubuntu 24.04 и запускает проверку синтаксиса, ShellCheck, оба автоматических набора и пять функций на поставляемой базе. В этом отчёте отражены локальные контейнерные запуски; факт и результат каждого удалённого запуска следует смотреть в Actions.
+Workflow `.github/workflows/test.yml` настроен на push и pull request, использует Ubuntu 24.04 и запускает проверку синтаксиса, ShellCheck, оба автоматических набора и пять функций на поставляемой базе. [Первый удалённый запуск](https://github.com/asimonov05/student-reports-lab4/actions/runs/42301379687) для коммита `7affa26` завершился со статусом `success`. Результаты последующих запусков доступны на вкладке Actions.
