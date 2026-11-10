@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Command-line entry point; all reports are read-only.
+# Команды здесь только разбирают аргументы. Сами отчёты — в reports.sh.
 set -euo pipefail
 if ((BASH_VERSINFO[0] < 4)); then
     printf 'Ошибка: требуется Bash 4 или новее.\n' >&2
     exit 2
 fi
-APP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+APP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
 # shellcheck source-path=SCRIPTDIR
-# shellcheck source=reports.sh
-source "$APP_DIR/reports.sh"
+# shellcheck source=../lib/reports.sh
+source "$APP_DIR/lib/reports.sh"
 
 usage() {
     cat <<'EOF'
@@ -22,7 +22,7 @@ usage() {
   first-pass ПРЕДМЕТ                          все тесты с первой попытки
   longest-names                               самые длинные фамилии
   yearly-best ПРЕДМЕТ ТЕСТ                     лучшие результаты по годам
-Данные по умолчанию: data/labfiles-3-26 рядом со скриптами.
+Данные по умолчанию: data/labfiles-3-26 в каталоге проекта.
 EOF
 }
 
@@ -38,6 +38,8 @@ case ${1:-} in
 esac
 COMMAND=$1
 shift
+
+# Число аргументов проверяем заранее, чтобы ниже спокойно обращаться к $1, $2 и т.д.
 case $COMMAND in
     groups|subjects|longest-names) expected=0 ;;
     tests|first-pass) expected=1 ;;
@@ -47,24 +49,38 @@ case $COMMAND in
     *) fail "Неизвестная команда: $COMMAND. См. --help." ;;
 esac
 (($# == expected)) || fail "Неверное число параметров команды $COMMAND. См. --help."
+
 prepare_environment
 case $COMMAND in
     groups) list_groups ;;
     subjects) list_subjects ;;
-    tests) check_subject "$1"; list_tests "$1" ;;
+    tests)
+        check_subject "$1"
+        list_tests "$1"
+        ;;
     longest-names) run_report "$COMMAND" '' '' '' '' '' ;;
-    first-pass) check_subject "$1"; run_report "$COMMAND" '' "$1" '' '' '' ;;
+    first-pass)
+        check_subject "$1"
+        run_report "$COMMAND" '' "$1" '' '' ''
+        ;;
     yearly-best)
-        check_subject "$1"; check_test "$1" "$2"
-        run_report "$COMMAND" '' "$1" "$2" '' '' ;;
+        check_subject "$1"
+        check_test "$1" "$2"
+        run_report "$COMMAND" '' "$1" "$2" '' ''
+        ;;
     retakes)
-        check_group "$1"; check_subject "$2"; check_test "$2" "$3"
-        run_report "$COMMAND" "$1" "$2" "$3" '' '' ;;
+        check_group "$1"
+        check_subject "$2"
+        check_test "$2" "$3"
+        run_report "$COMMAND" "$1" "$2" "$3" '' ''
+        ;;
     attendance)
-        check_group "$1"; check_subject "$2"
+        check_group "$1"
+        check_subject "$2"
         if ! positive_integer "$3" || ! positive_integer "$4"; then
             fail 'Номера занятий должны быть положительными целыми числами (до 9 цифр).'
         fi
         ((10#$3 <= 10#$4)) || fail 'Начало диапазона не должно превышать конец.'
-        run_report "$COMMAND" "$1" "$2" '' "$3" "$4" ;;
+        run_report "$COMMAND" "$1" "$2" '' "$3" "$4"
+        ;;
 esac

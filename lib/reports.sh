@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-# Shared validation and GNU awk reports. Sourced by student-report.
-fail() { printf 'Ошибка: %s\n' "$*" >&2; exit 2; }
+# Проверка данных и расчёты для командного интерфейса.
+fail() {
+    printf 'Ошибка: %s\n' "$*" >&2
+    exit 2
+}
 positive_integer() { [[ $1 =~ ^[0-9]{1,9}$ && $1 =~ [1-9] ]]; }
-readable_file() { [[ -f $1 && -r $1 ]] || fail "Файл отсутствует или недоступен для чтения: $1"; }
+readable_file() {
+    [[ -f $1 && -r $1 ]] || fail "Файл отсутствует или недоступен для чтения: $1"
+}
 safe_component() { [[ -n $1 && $1 != . && $1 != .. && $1 != */* && $1 != *$'\n'* && $1 != *$'\t'* ]]; }
 
 prepare_environment() {
@@ -28,7 +33,12 @@ prepare_environment() {
     done
 }
 
-list_groups() { local file; for file in "${GROUP_FILES[@]}"; do printf '%s\n' "${file##*/}"; done; }
+list_groups() {
+    local file
+    for file in "${GROUP_FILES[@]}"; do
+        printf '%s\n' "${file##*/}"
+    done
+}
 list_subjects() {
     local dir found=0
     for dir in "$DATA_DIR"/*/; do
@@ -41,7 +51,10 @@ list_subjects() {
     done
     ((found)) || fail 'В базе не найдены предметы с каталогом tests.'
 }
-check_group() { safe_component "$1" || fail 'Некорректный номер группы.'; readable_file "$DATA_DIR/students/groups/$1"; }
+check_group() {
+    safe_component "$1" || fail 'Некорректный номер группы.'
+    readable_file "$DATA_DIR/students/groups/$1"
+}
 check_subject() {
     if ! safe_component "$1" || [[ $1 == students ]]; then
         fail 'Некорректное название предмета.'
@@ -70,7 +83,8 @@ run_report() {
     case $mode in
         attendance)
             file="$DATA_DIR/$subject/$group-attendance"
-            readable_file "$file"; files+=("$file") ;;
+            readable_file "$file"
+            files+=("$file") ;;
         retakes|yearly-best) files+=("$DATA_DIR/$subject/tests/TEST-$test") ;;
         first-pass)
             for number in 1 2 3 4; do
@@ -87,7 +101,10 @@ run_report() {
     }
     function valid_date(value, parts, days, year, month, day) {
         if (value !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) return 0
-        split(value,parts,"-"); year=parts[1]+0; month=parts[2]+0; day=parts[3]+0
+        split(value,parts,"-")
+        year=parts[1]+0
+        month=parts[2]+0
+        day=parts[3]+0
         if (year<1 || month<1 || month>12 || day<1) return 0
         days=(month==2 ? 28+(year%4==0 && (year%100!=0 || year%400==0)) : (month==4 || month==6 || month==9 || month==11 ? 30 : 31))
         return day<=days
@@ -115,21 +132,26 @@ run_report() {
         if(ERRNO!="") error("Не удалось прочитать файл: " ERRNO)
         relative=substr(FILENAME,length(root)+2)
         if(index(relative,"students/groups/")==1) {
-            kind="roster"; current_group=substr(relative,length("students/groups/")+1)
+            kind="roster"
+            current_group=substr(relative,length("students/groups/")+1)
         } else if(index(relative,subject "/tests/")==1) {
-            kind="test"; current_test=substr(relative,length(subject "/tests/TEST-")+1)
+            kind="test"
+            current_test=substr(relative,length(subject "/tests/TEST-")+1)
         } else kind="attendance"
         rows=0
     }
     {
-        sub(/\r$/,""); if(FNR==1) sub(/^\xef\xbb\xbf/,"")
+        sub(/\r$/,"")
+        if(FNR==1) sub(/^\xef\xbb\xbf/,"")
         if($0 ~ /^[ \t]*$/) next
         rows++
         if(kind=="roster") {
             if($0 ~ /[;[:space:]]/) error("Ожидался один идентификатор студента в строке")
+            # Одинаковые имена в разных группах — это разные студенты.
             id=current_group SUBSEP $0
             if(id in names) error("Студент дважды записан в группе")
-            names[id]=$0; groups[id]=current_group
+            names[id]=$0
+            groups[id]=current_group
             if(!match($0,/^[[:upper:]][[:lower:]]*(-[[:upper:]][[:lower:]]+)*/)) error("Не удалось выделить фамилию")
             surnames[id]=substr($0,RSTART,RLENGTH)
         } else if(kind=="test") {
@@ -140,14 +162,20 @@ run_report() {
             if(fields[4] !~ /^[0-9]+$/ || length(fields[4])>9) error("Количество правильных ответов должно быть неотрицательным целым числом")
             if(fields[5] !~ /^[2-5]([+][+]?|--?)?$/) error("Некорректная оценка")
             if(mode=="retakes" && fields[1]==group) attempts[id]++
-            if(mode=="first-pass") { tries[id,current_test]++; grade[id,current_test]=fields[5]+0 }
+            if(mode=="first-pass") {
+                tries[id,current_test]++
+                grade[id,current_test]=fields[5]+0
+            }
             if(mode=="yearly-best") {
-                year=substr(fields[3],1,4); score=fields[4]+0
+                year=substr(fields[3],1,4)
+                score=fields[4]+0
                 if(!(year in best_year) || score>best_year[year]) best_year[year]=score
                 if(!((year SUBSEP id) in person_year) || score>person_year[year,id]) person_year[year,id]=score
             }
         } else {
-            line=$0; sub(/^[ \t]+/,"",line); sub(/[ \t]+$/,"",line)
+            line=$0
+            sub(/^[ \t]+/,"",line)
+            sub(/[ \t]+$/,"",line)
             if(split(line,fields,/[ \t]+/)!=2 || fields[2] !~ /^[01]+$/) error("Посещаемость: ожидается имя и строка из 0 и 1")
             id=group SUBSEP fields[1]
             if(!(id in names)) error("Студент из посещаемости отсутствует в выбранной группе")
@@ -178,7 +206,11 @@ run_report() {
             maximum=-1; chosen=""
             for(id in attempts) {
                 key=names[id] SUBSEP groups[id]
-                if(attempts[id]>maximum || (attempts[id]==maximum && key<chosen)) { maximum=attempts[id]; chosen=key; winner=id }
+                if(attempts[id]>maximum || (attempts[id]==maximum && key<chosen)) {
+                    maximum=attempts[id]
+                    chosen=key
+                    winner=id
+                }
             }
             if(chosen!="") result[chosen]=winner
             heading("Максимальное количество пересдач")
@@ -210,10 +242,14 @@ run_report() {
             count=asorti(best_year,years)
             if(!count) no_results()
             for(y=1;y<=count;y++) {
-                year=years[y]; delete result
+                year=years[y]
+                delete result
                 for(id in names) if(((year SUBSEP id) in person_year) && person_year[year,id]==best_year[year]) result[names[id] SUBSEP groups[id]]=id
                 n=asorti(result,order)
-                for(i=1;i<=n;i++) { id=result[order[i]]; print year,names[id],groups[id],best_year[year] }
+                for(i=1;i<=n;i++) {
+                    id=result[order[i]]
+                    print year,names[id],groups[id],best_year[year]
+                }
             }
         }
     }' "${files[@]}"

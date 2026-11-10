@@ -3,6 +3,6 @@ test:
 	bash tests/test.sh
 	bash tests/gui-test.sh
 gui:
-	./student-gui
+	./bin/student-gui
 report:
-	./student-report --help
+	./bin/student-report --help

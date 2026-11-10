@@ -2,7 +2,7 @@
 # Integration tests exercise public CLI behavior and independently known answers.
 set -euo pipefail
 repo=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-cli="$repo/student-report"
+cli="$repo/bin/student-report"
 temp=$(mktemp -d)
 trap 'rm -rf -- "$temp"' EXIT
 fixture="$temp/data with spaces"
