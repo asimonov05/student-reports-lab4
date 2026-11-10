@@ -13,18 +13,18 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gawk shellcheck
       - name: Check Bash syntax and ShellCheck
         run: |
-          for script in bin/student-report bin/student-gui lib/reports.sh tests/*.sh; do
+          for script in student-report student-gui reports.sh tests/*.sh; do
             bash -n "$script"
           done
-          shellcheck -x bin/student-report bin/student-gui lib/reports.sh tests/*.sh
+          shellcheck -x student-report student-gui reports.sh tests/*.sh
       - name: Verify reports and GUI contract
         run: |
           bash tests/test.sh
           bash tests/gui-test.sh
       - name: Check supplied dataset
         run: |
-          ./bin/student-report attendance A-06-23 Пересдачеведение 4 10
-          ./bin/student-report retakes A-06-23 Пересдачеведение 1
-          ./bin/student-report first-pass Пересдачеведение
-          ./bin/student-report longest-names
-          ./bin/student-report yearly-best Пересдачеведение 1
+          ./student-report attendance A-06-23 Пересдачеведение 4 10
+          ./student-report retakes A-06-23 Пересдачеведение 1
+          ./student-report first-pass Пересдачеведение
+          ./student-report longest-names
+          ./student-report yearly-best Пересдачеведение 1

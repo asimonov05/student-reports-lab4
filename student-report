@@ -5,10 +5,10 @@ if ((BASH_VERSINFO[0] < 4)); then
     printf 'Ошибка: требуется Bash 4 или новее.\n' >&2
     exit 2
 fi
-APP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
+APP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 # shellcheck source-path=SCRIPTDIR
-# shellcheck source=../lib/reports.sh
-source "$APP_DIR/lib/reports.sh"
+# shellcheck source=reports.sh
+source "$APP_DIR/reports.sh"
 
 usage() {
     cat <<'EOF'
@@ -22,7 +22,7 @@ usage() {
   first-pass ПРЕДМЕТ                          все тесты с первой попытки
   longest-names                               самые длинные фамилии
   yearly-best ПРЕДМЕТ ТЕСТ                     лучшие результаты по годам
-Данные по умолчанию: data/labfiles-3-26 рядом с каталогом bin.
+Данные по умолчанию: data/labfiles-3-26 рядом со скриптами.
 EOF
 }
 

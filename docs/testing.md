@@ -11,10 +11,10 @@
 Воспроизведение из корня проекта в Linux:
 
 ```bash
-for script in bin/student-report bin/student-gui lib/reports.sh tests/*.sh; do
+for script in student-report student-gui reports.sh tests/*.sh; do
     bash -n "$script"
 done
-shellcheck -x bin/student-report bin/student-gui lib/reports.sh tests/*.sh
+shellcheck -x student-report student-gui reports.sh tests/*.sh
 bash tests/test.sh
 bash tests/gui-test.sh
 ```

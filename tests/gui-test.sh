@@ -6,11 +6,11 @@ set -euo pipefail
 project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 test_dir=$(mktemp -d "${TMPDIR:-/tmp}/student-gui-test.XXXXXX")
 trap 'rm -rf -- "$test_dir"' EXIT
-mkdir -p "$test_dir/app/bin" "$test_dir/mock"
-cp -- "$project_dir/bin/student-gui" "$test_dir/app/bin/student-gui"
+mkdir -p "$test_dir/app" "$test_dir/mock"
+cp -- "$project_dir/student-gui" "$test_dir/app/student-gui"
 export GUI_TEST_DIR="$test_dir" DISPLAY=:mock
 
-cat >"$test_dir/app/bin/student-report" <<'REPORT'
+cat >"$test_dir/app/student-report" <<'REPORT'
 #!/usr/bin/env bash
 set -eu
 [[ $1 == --data && $2 == "$GUI_TEST_DIR/data with spaces" ]]
@@ -70,7 +70,7 @@ fi
 if [[ -n $value ]]; then printf '%s\n' "$value"; fi
 exit "$status"
 ZENITY
-chmod +x "$test_dir/app/bin/student-report" "$test_dir/mock/zenity"
+chmod +x "$test_dir/app/student-report" "$test_dir/mock/zenity"
 export PATH="$test_dir/mock:$PATH"
 passed=0
 
@@ -84,7 +84,7 @@ prepare() {
 }
 
 run_gui() {
-    bash "$test_dir/app/bin/student-gui" --data "$test_dir/data with spaces" \
+    bash "$test_dir/app/student-gui" --data "$test_dir/data with spaces" \
         >"$test_dir/stdout" 2>"$test_dir/stderr"
     local expected actual
     expected=$(wc -l <"$test_dir/queue")

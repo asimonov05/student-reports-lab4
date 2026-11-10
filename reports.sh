@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shared validation and GNU awk reports. Sourced by bin/student-report.
+# Shared validation and GNU awk reports. Sourced by student-report.
 fail() { printf 'Ошибка: %s\n' "$*" >&2; exit 2; }
 positive_integer() { [[ $1 =~ ^[0-9]{1,9}$ && $1 =~ [1-9] ]]; }
 readable_file() { [[ -f $1 && -r $1 ]] || fail "Файл отсутствует или недоступен для чтения: $1"; }
