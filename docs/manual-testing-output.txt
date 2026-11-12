@@ -1,0 +1,697 @@
+APP="$PWD/bin/student-report"
+ARCHIVE="/home/psidjik/code/mpei/os-labs/labs-2026/lab3/labfiles-3-26.zip"
+QA=$(mktemp -d)
+unzip -q "$ARCHIVE" -d "$QA/source data"
+DATA="$QA/source data/labfiles-3-26"
+unset STUDENT_DATA_DIR
+git rev-parse --short HEAD
+543644c
+bash --version | head -n 1
+GNU bash, version 5.3.20(1)-release (x86_64-pc-linux-gnu)
+gawk --version | head -n 1
+GNU Awk 5.4.1, API 4.1, PMA Avon 8-g1, (GNU MPFR 4.2.2, GNU MP 6.3.0)
+printf 'База ЛР 3: %s\nМатериалы проверки: %s\n' "$DATA" "$QA"
+База ЛР 3: /tmp/tmp.G97ZC4XIsL/source data/labfiles-3-26
+Материалы проверки: /tmp/tmp.G97ZC4XIsL
+find "$DATA" -type f -exec sha256sum {} + | LC_ALL=C sort > "$QA/before.sha256"
+wc -l "$QA/before.sha256"
+119 /tmp/tmp.G97ZC4XIsL/before.sha256
+"$APP" --help
+Анализ данных студентов
+Использование: student-report [--data КАТАЛОГ] КОМАНДА [ПАРАМЕТРЫ]
+  groups                                      список групп
+  subjects                                    список предметов
+  tests ПРЕДМЕТ                               номера тестов предмета
+  attendance ГРУППА ПРЕДМЕТ НАЧАЛО КОНЕЦ      лучшая посещаемость
+  retakes ГРУППА ПРЕДМЕТ ТЕСТ                  больше всего пересдач
+  first-pass ПРЕДМЕТ                          все тесты с первой попытки
+  longest-names                               самые длинные фамилии
+  yearly-best ПРЕДМЕТ ТЕСТ                     лучшие результаты по годам
+Данные по умолчанию: data/labfiles-3-26 в каталоге проекта.
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" groups
+A-06-04
+A-06-05
+A-06-06
+A-06-07
+A-06-08
+A-06-09
+A-06-10
+A-06-11
+A-06-12
+A-06-13
+A-06-14
+A-06-15
+A-06-16
+A-06-17
+A-06-18
+A-06-19
+A-06-20
+A-06-21
+A-06-22
+A-06-23
+A-09-17
+A-09-18
+A-09-19
+A-09-20
+A-09-21
+A-09-22
+A-09-23
+Ae-21-21
+Ae-21-22
+Ae-21-23
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" subjects
+Пересдачеведение
+Цирковое_Дело
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" tests 'Цирковое_Дело'
+1
+2
+3
+4
+echo "Код: $?"
+Код: 0
+cat "$DATA/Цирковое_Дело/Ae-21-23-attendance"
+BondarAS 101111110101110111
+BurmistrovSF 111001100101111101
+GlebovSY 011101101111111111
+GorbenkoKY 111111111111001011
+ZhigulinKY 011111001111100110
+ItskovIS 110101101011111101
+LiaminTA 111111111111010001
+NesterovAS 111111111110111101
+PershakovSA 101111111110110101
+SimonovAR 111100111011111101
+SudbininNA 011110100111111111
+FrolovaMarVl 111011111111111111
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 4 10
+Лучшая посещаемость
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; занятия: 4–10 включительно
+Студент	Группа	Посещено
+GorbenkoKY	Ae-21-23	7
+LiaminTA	Ae-21-23	7
+NesterovAS	Ae-21-23	7
+PershakovSA	Ae-21-23	7
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" attendance A-06-23 'Цирковое_Дело' 4 10
+Лучшая посещаемость
+
+Группа: A-06-23; предмет: Цирковое_Дело; занятия: 4–10 включительно
+Студент	Группа	Посещено
+GroshevAV	A-06-23	7
+KalinkinDS	A-06-23	7
+KarpovaVG	A-06-23	7
+KrasevPS	A-06-23	7
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 1 1
+Лучшая посещаемость
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; занятия: 1–1 включительно
+Студент	Группа	Посещено
+BondarAS	Ae-21-23	1
+BurmistrovSF	Ae-21-23	1
+FrolovaMarVl	Ae-21-23	1
+GorbenkoKY	Ae-21-23	1
+ItskovIS	Ae-21-23	1
+LiaminTA	Ae-21-23	1
+NesterovAS	Ae-21-23	1
+PershakovSA	Ae-21-23	1
+SimonovAR	Ae-21-23	1
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 1 18
+Лучшая посещаемость
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; занятия: 1–18 включительно
+Студент	Группа	Посещено
+FrolovaMarVl	Ae-21-23	17
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" retakes Ae-21-23 'Цирковое_Дело' 1
+Максимальное количество пересдач
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; тест: 1; все годы
+Студент	Группа	Пересдачи
+BurmistrovSF	Ae-21-23	8
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" retakes Ae-21-23 'Пересдачеведение' 1
+Максимальное количество пересдач
+
+Группа: Ae-21-23; предмет: Пересдачеведение; тест: 1; все годы
+Студент	Группа	Пересдачи
+BondarAS	Ae-21-23	3
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" first-pass 'Цирковое_Дело' > "$QA/first-pass.txt"
+echo "Код: $?"
+Код: 0
+cat "$QA/first-pass.txt"
+Все тесты с первой попытки
+
+Предмет: Цирковое_Дело; все группы; тесты 1–4
+Студент	Группа
+AlexeevaYD	A-06-19
+AnasenkoBI	A-06-09
+AxenovAD	A-06-15
+BalkarovAA	A-06-19
+BoldyrevIN	A-06-20
+ChakolyadenisE	A-06-17
+GumerovaEF	A-09-20
+IsmagilovaXY	A-09-21
+IvakinSI	A-06-13
+IvanovMK	A-06-06
+KardanevAA	A-06-17
+KocherovaAlA	Ae-21-22
+KorenevNI	A-06-15
+KoshevarovAD	A-09-22
+KostinaMarA	A-06-17
+LidinaSM	A-06-08
+LidinaTJ	A-06-06
+LipovDC	A-06-09
+MaximovRA	A-09-20
+NazhmetdinovMA	A-06-17
+OsipovMA	Ae-21-22
+PoTM	A-06-07
+PrusovAS	A-06-15
+RybtsovaAV	A-09-19
+SharibzhanovIT	Ae-21-21
+SimonovAR	Ae-21-23
+SuminYR	A-06-19
+TatarinovaAA	Ae-21-22
+UsachyovOR	A-06-10
+YeremeevArD	A-06-19
+tail -n +5 "$QA/first-pass.txt" | wc -l
+30
+"$APP" --data "$DATA" longest-names > "$QA/ok.out" 2> "$QA/ok.err"
+echo "Код: $?"
+Код: 0
+cat "$QA/ok.out"
+Самые длинные фамилии
+
+Область: вся база
+Студент	Группа	Фамилия	Символов
+Surovtsev-ButovA	A-06-04	Surovtsev-Butov	15
+wc -c "$QA/ok.err"
+0 /tmp/tmp.G97ZC4XIsL/ok.err
+"$APP" --data "$DATA" yearly-best 'Цирковое_Дело' 1
+Лучшие результаты по годам
+
+Предмет: Цирковое_Дело; тест: 1; все группы
+Год	Студент	Группа	Правильных ответов
+2007	MelnikovD	A-06-04	25
+2008	KropaninRF	A-06-05	25
+2008	PolivanovIE	A-06-05	25
+2008	SelidovOR	A-06-05	25
+2009	AnasenkoII	A-06-06	25
+2009	IbragimovWM	A-06-06	25
+2009	LidinaTJ	A-06-06	25
+2010	PetrovaPY	A-06-07	25
+2011	ShipovUU	A-06-08	24
+2012	PokrovskyYJ	A-06-09	24
+2013	HromoyPN	A-06-10	24
+2013	KachusovUJ	A-06-10	24
+2013	VitayevJV	A-06-10	24
+2013	ZadornovJT	A-06-10	24
+2014	IvashinXS	A-06-11	25
+2015	DryaginaVC	A-06-12	25
+2016	IvankovED	A-06-13	25
+2016	KropaninQN	A-06-13	25
+2017	AbramenkoSemV	A-06-14	25
+2017	ChertokND	A-06-14	25
+2017	KulbiakinAS	A-06-14	25
+2018	PrusovAS	A-06-15	25
+2018	RudakovKR	A-06-15	25
+2019	ShubinKA	A-06-16	25
+2020	GromovMN	A-09-17	25
+2020	KlimenkoAVal	A-06-17	25
+2020	MakhalovaOS	A-09-17	25
+2021	KipinSV	A-09-18	25
+2022	KhaskovaUA	A-09-19	24
+2022	MatveevaVerA	A-06-19	24
+2022	RybtsovaAV	A-09-19	24
+2022	SeliukovKY	A-09-19	24
+2023	BijoyA	A-09-20	25
+2023	ChernyshovDM	A-06-20	25
+2023	TutayevAA	A-09-20	25
+2024	FilippovDS	Ae-21-21	25
+2024	MotorinKA	A-06-21	25
+2024	ShverdiakovMA	A-06-21	25
+2024	ZholobovDV	A-09-21	25
+2025	KocherovaAlA	Ae-21-22	25
+2025	NaimanAM	A-09-22	25
+2025	OsipovMA	Ae-21-22	25
+2025	RiabchikovAD	A-09-22	25
+2025	SenkovskyaIY	A-06-22	25
+2025	ShamitovaAA	Ae-21-22	25
+2026	BurmistrovSF	Ae-21-23	25
+2026	KarpovaVG	A-06-23	25
+2026	LiaminTA	Ae-21-23	25
+2026	LopatinAV	A-09-23	25
+2026	SaponGM	A-06-23	25
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" yearly-best 'Цирковое_Дело' 4
+Лучшие результаты по годам
+
+Предмет: Цирковое_Дело; тест: 4; все группы
+Год	Студент	Группа	Правильных ответов
+2007	SeLou	A-06-04	25
+2008	MatricaVC	A-06-05	25
+2008	PoDD	A-06-05	25
+2009	KuznecovFB	A-06-06	25
+2009	LitvinovTP	A-06-06	25
+2010	AbramovBJ	A-06-07	25
+2010	LipovWO	A-06-07	25
+2010	PoTM	A-06-07	25
+2011	LidinaSM	A-06-08	24
+2011	ShipovUU	A-06-08	24
+2012	BlinovNI	A-06-09	24
+2013	IvazovaLZ	A-06-10	25
+2014	MatricaRP	A-06-11	25
+2014	PozharskyGA	A-06-11	25
+2015	KasharinUZ	A-06-12	25
+2016	KriоutchkovLO	A-06-13	24
+2017	KharitonovKY	A-06-14	24
+2018	MosinaAnA	A-06-15	25
+2019	ChincharovPC	A-06-16	25
+2019	PakhomovVS	A-06-16	25
+2020	BogodukhovYD	A-06-17	24
+2020	LebedevAlD	A-09-17	24
+2021	GorinIA	A-06-18	25
+2021	IgnatovYM	A-06-18	25
+2022	LikhanovaYY	A-09-19	25
+2023	TereshinDP	A-06-20	25
+2024	KolevatovAS	A-09-21	25
+2024	KrasnovaAlA	Ae-21-21	25
+2024	LarinNikA	A-09-21	25
+2025	MartsevoyYA	Ae-21-22	25
+2025	RomanovDanA	Ae-21-22	25
+2025	VlasovAlA	Ae-21-22	25
+2026	GlebovSY	Ae-21-23	25
+2026	IvashutaYA	A-09-23	25
+2026	LitvichenkoYD	A-09-23	25
+2026	NaimanAM	A-09-23	25
+2026	YurkovaSM	A-09-23	25
+echo "Код: $?"
+Код: 0
+BAD=$(mktemp -d "$QA/zero-attendance.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i -E 's/[01]+$/000000000000000000/' "$BAD/Цирковое_Дело/Ae-21-23-attendance"
+"$APP" --data "$BAD" attendance Ae-21-23 'Цирковое_Дело' 1 18
+Лучшая посещаемость
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; занятия: 1–18 включительно
+Студент	Группа	Посещено
+BondarAS	Ae-21-23	0
+BurmistrovSF	Ae-21-23	0
+FrolovaMarVl	Ae-21-23	0
+GlebovSY	Ae-21-23	0
+GorbenkoKY	Ae-21-23	0
+ItskovIS	Ae-21-23	0
+LiaminTA	Ae-21-23	0
+NesterovAS	Ae-21-23	0
+PershakovSA	Ae-21-23	0
+SimonovAR	Ae-21-23	0
+SudbininNA	Ae-21-23	0
+ZhigulinKY	Ae-21-23	0
+echo "Код: $?"
+Код: 0
+BAD=$(mktemp -d "$QA/zero-retakes.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sort -t ';' -k1,2 -u "$DATA/Цирковое_Дело/tests/TEST-1" > "$BAD/Цирковое_Дело/tests/TEST-1"
+"$APP" --data "$BAD" retakes Ae-21-23 'Цирковое_Дело' 1
+Максимальное количество пересдач
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; тест: 1; все годы
+Студент	Группа	Пересдачи
+BondarAS	Ae-21-23	0
+echo "Код: $?"
+Код: 0
+BAD=$(mktemp -d "$QA/retake-years.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '0,/^Ae-21-23;BurmistrovSF;2026-/s/^Ae-21-23;BurmistrovSF;2026-/Ae-21-23;BurmistrovSF;2025-/' "$BAD/Цирковое_Дело/tests/TEST-1"
+"$APP" --data "$BAD" retakes Ae-21-23 'Цирковое_Дело' 1
+Максимальное количество пересдач
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; тест: 1; все годы
+Студент	Группа	Пересдачи
+BurmistrovSF	Ae-21-23	8
+echo "Код: $?"
+Код: 0
+BAD=$(mktemp -d "$QA/failed-grade.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '/^Ae-21-23;SimonovAR;/s/;[^;]*$/;2/' "$BAD/Цирковое_Дело/tests/TEST-4"
+"$APP" --data "$BAD" first-pass 'Цирковое_Дело' > "$QA/failed-grade.txt"
+echo "Код: $?"
+Код: 0
+cat "$QA/failed-grade.txt"
+Все тесты с первой попытки
+
+Предмет: Цирковое_Дело; все группы; тесты 1–4
+Студент	Группа
+AlexeevaYD	A-06-19
+AnasenkoBI	A-06-09
+AxenovAD	A-06-15
+BalkarovAA	A-06-19
+BoldyrevIN	A-06-20
+ChakolyadenisE	A-06-17
+GumerovaEF	A-09-20
+IsmagilovaXY	A-09-21
+IvakinSI	A-06-13
+IvanovMK	A-06-06
+KardanevAA	A-06-17
+KocherovaAlA	Ae-21-22
+KorenevNI	A-06-15
+KoshevarovAD	A-09-22
+KostinaMarA	A-06-17
+LidinaSM	A-06-08
+LidinaTJ	A-06-06
+LipovDC	A-06-09
+MaximovRA	A-09-20
+NazhmetdinovMA	A-06-17
+OsipovMA	Ae-21-22
+PoTM	A-06-07
+PrusovAS	A-06-15
+RybtsovaAV	A-09-19
+SharibzhanovIT	Ae-21-21
+SuminYR	A-06-19
+TatarinovaAA	Ae-21-22
+UsachyovOR	A-06-10
+YeremeevArD	A-06-19
+tail -n +5 "$QA/failed-grade.txt" | wc -l
+29
+BAD=$(mktemp -d "$QA/repeated-best.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+grep '^Ae-21-23;BurmistrovSF;2026-.*;25;' "$DATA/Цирковое_Дело/tests/TEST-1" | head -n 1 >> "$BAD/Цирковое_Дело/tests/TEST-1"
+"$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+Лучшие результаты по годам
+
+Предмет: Цирковое_Дело; тест: 1; все группы
+Год	Студент	Группа	Правильных ответов
+2007	MelnikovD	A-06-04	25
+2008	KropaninRF	A-06-05	25
+2008	PolivanovIE	A-06-05	25
+2008	SelidovOR	A-06-05	25
+2009	AnasenkoII	A-06-06	25
+2009	IbragimovWM	A-06-06	25
+2009	LidinaTJ	A-06-06	25
+2010	PetrovaPY	A-06-07	25
+2011	ShipovUU	A-06-08	24
+2012	PokrovskyYJ	A-06-09	24
+2013	HromoyPN	A-06-10	24
+2013	KachusovUJ	A-06-10	24
+2013	VitayevJV	A-06-10	24
+2013	ZadornovJT	A-06-10	24
+2014	IvashinXS	A-06-11	25
+2015	DryaginaVC	A-06-12	25
+2016	IvankovED	A-06-13	25
+2016	KropaninQN	A-06-13	25
+2017	AbramenkoSemV	A-06-14	25
+2017	ChertokND	A-06-14	25
+2017	KulbiakinAS	A-06-14	25
+2018	PrusovAS	A-06-15	25
+2018	RudakovKR	A-06-15	25
+2019	ShubinKA	A-06-16	25
+2020	GromovMN	A-09-17	25
+2020	KlimenkoAVal	A-06-17	25
+2020	MakhalovaOS	A-09-17	25
+2021	KipinSV	A-09-18	25
+2022	KhaskovaUA	A-09-19	24
+2022	MatveevaVerA	A-06-19	24
+2022	RybtsovaAV	A-09-19	24
+2022	SeliukovKY	A-09-19	24
+2023	BijoyA	A-09-20	25
+2023	ChernyshovDM	A-06-20	25
+2023	TutayevAA	A-09-20	25
+2024	FilippovDS	Ae-21-21	25
+2024	MotorinKA	A-06-21	25
+2024	ShverdiakovMA	A-06-21	25
+2024	ZholobovDV	A-09-21	25
+2025	KocherovaAlA	Ae-21-22	25
+2025	NaimanAM	A-09-22	25
+2025	OsipovMA	Ae-21-22	25
+2025	RiabchikovAD	A-09-22	25
+2025	SenkovskyaIY	A-06-22	25
+2025	ShamitovaAA	Ae-21-22	25
+2026	BurmistrovSF	Ae-21-23	25
+2026	KarpovaVG	A-06-23	25
+2026	LiaminTA	Ae-21-23	25
+2026	LopatinAV	A-09-23	25
+2026	SaponGM	A-06-23	25
+echo "Код: $?"
+Код: 0
+BAD=$(mktemp -d "$QA/empty-test.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+: > "$BAD/Цирковое_Дело/tests/TEST-1"
+"$APP" --data "$BAD" retakes Ae-21-23 'Цирковое_Дело' 1
+Максимальное количество пересдач
+
+Группа: Ae-21-23; предмет: Цирковое_Дело; тест: 1; все годы
+Студент	Группа	Пересдачи
+Подходящих студентов нет.
+echo "Код: $?"
+Код: 0
+"$APP" --data "$BAD" first-pass 'Цирковое_Дело'
+Все тесты с первой попытки
+
+Предмет: Цирковое_Дело; все группы; тесты 1–4
+Студент	Группа
+Подходящих студентов нет.
+echo "Код: $?"
+Код: 0
+"$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+Лучшие результаты по годам
+
+Предмет: Цирковое_Дело; тест: 1; все группы
+Год	Студент	Группа	Правильных ответов
+Подходящих студентов нет.
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" attendance Ae-21-23 'Пересдачеведение' 4 10
+Лучшая посещаемость
+
+Группа: Ae-21-23; предмет: Пересдачеведение; занятия: 4–10 включительно
+Студент	Группа	Посещено
+ItskovIS	Ae-21-23	7
+echo "Код: $?"
+Код: 0
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 0 2 > "$QA/error.out" 2> "$QA/error.err"
+echo "Код: $?"
+Код: 2
+wc -c "$QA/error.out"
+0 /tmp/tmp.G97ZC4XIsL/error.out
+cat "$QA/error.err"
+Ошибка: Номера занятий должны быть положительными целыми числами (до 9 цифр).
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 1.5 2
+Ошибка: Номера занятий должны быть положительными целыми числами (до 9 цифр).
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 10 4
+Ошибка: Начало диапазона не должно превышать конец.
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 1 19
+Ошибка: Конец диапазона превышает число занятий (18) (/tmp/tmp.G97ZC4XIsL/source data/labfiles-3-26/Цирковое_Дело/Ae-21-23-attendance:1)
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" unknown-command
+Ошибка: Неизвестная команда: unknown-command. См. --help.
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" attendance Ae-21-23 'Цирковое_Дело' 4
+Ошибка: Неверное число параметров команды attendance. См. --help.
+echo "Код: $?"
+Код: 2
+"$APP" --data
+Ошибка: После --data укажите каталог данных.
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA"
+Анализ данных студентов
+Использование: student-report [--data КАТАЛОГ] КОМАНДА [ПАРАМЕТРЫ]
+  groups                                      список групп
+  subjects                                    список предметов
+  tests ПРЕДМЕТ                               номера тестов предмета
+  attendance ГРУППА ПРЕДМЕТ НАЧАЛО КОНЕЦ      лучшая посещаемость
+  retakes ГРУППА ПРЕДМЕТ ТЕСТ                  больше всего пересдач
+  first-pass ПРЕДМЕТ                          все тесты с первой попытки
+  longest-names                               самые длинные фамилии
+  yearly-best ПРЕДМЕТ ТЕСТ                     лучшие результаты по годам
+Данные по умолчанию: data/labfiles-3-26 в каталоге проекта.
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" attendance UNKNOWN 'Цирковое_Дело' 4 10
+Ошибка: Файл отсутствует или недоступен для чтения: /tmp/tmp.G97ZC4XIsL/source data/labfiles-3-26/students/groups/UNKNOWN
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" yearly-best 'НетПредмета' 1
+Ошибка: Предмет не найден или недоступен: НетПредмета
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" retakes Ae-21-23 'Цирковое_Дело' 5
+Ошибка: Номер теста должен быть от 1 до 4.
+echo "Код: $?"
+Код: 2
+"$APP" --data "$DATA" tests '../Цирковое_Дело'
+Ошибка: Некорректное название предмета.
+echo "Код: $?"
+Код: 2
+"$APP" --data "$QA/no-database" groups
+Ошибка: Каталог данных отсутствует или недоступен: /tmp/tmp.G97ZC4XIsL/no-database
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/csv-fields.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '1s/;[^;]*$//' "$BAD/Цирковое_Дело/tests/TEST-1"
+head -n 1 "$BAD/Цирковое_Дело/tests/TEST-1"
+A-06-04;PashkovskyA;2007-07-06;17
+"$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+Ошибка: В строке теста должно быть пять полей через точку с запятой (/tmp/tmp.G97ZC4XIsL/csv-fields.YSPeKx/Цирковое_Дело/tests/TEST-1:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/csv-student.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i -E '1s/^([^;]*);[^;]*/\1;UNKNOWN/' "$BAD/Цирковое_Дело/tests/TEST-1"
+head -n 1 "$BAD/Цирковое_Дело/tests/TEST-1"
+A-06-04;UNKNOWN;2007-07-06;17;3
+"$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+Ошибка: Студент или группа из теста отсутствует в students/groups (/tmp/tmp.G97ZC4XIsL/csv-student.t2YJmI/Цирковое_Дело/tests/TEST-1:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/csv-date.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i -E '1s/[0-9]{4}-[0-9]{2}-[0-9]{2}/2023-02-29/' "$BAD/Цирковое_Дело/tests/TEST-1"
+head -n 1 "$BAD/Цирковое_Дело/tests/TEST-1"
+A-06-04;PashkovskyA;2023-02-29;17;3
+"$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+Ошибка: Некорректная дата попытки (/tmp/tmp.G97ZC4XIsL/csv-date.fj3WaA/Цирковое_Дело/tests/TEST-1:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/csv-score.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i -E '1s/;[^;]*;([^;]*)$/;-1;\1/' "$BAD/Цирковое_Дело/tests/TEST-1"
+head -n 1 "$BAD/Цирковое_Дело/tests/TEST-1"
+A-06-04;PashkovskyA;2007-07-06;-1;3
+"$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+Ошибка: Количество правильных ответов должно быть неотрицательным целым числом (/tmp/tmp.G97ZC4XIsL/csv-score.djOTpL/Цирковое_Дело/tests/TEST-1:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/csv-grade.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '1s/;[^;]*$/;6/' "$BAD/Цирковое_Дело/tests/TEST-1"
+head -n 1 "$BAD/Цирковое_Дело/tests/TEST-1"
+A-06-04;PashkovskyA;2007-07-06;17;6
+"$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+Ошибка: Некорректная оценка (/tmp/tmp.G97ZC4XIsL/csv-grade.PfCi6S/Цирковое_Дело/tests/TEST-1:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/roster-empty.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+: > "$BAD/students/groups/Ae-21-23"
+"$APP" --data "$BAD" longest-names
+Ошибка: Пустой список группы (/tmp/tmp.G97ZC4XIsL/roster-empty.zyB8An/students/groups/Ae-21-23:0)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/roster-duplicate.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+printf '%s\n' "$(head -n 1 "$DATA/students/groups/Ae-21-23")" >> "$BAD/students/groups/Ae-21-23"
+"$APP" --data "$BAD" longest-names
+Ошибка: Студент дважды записан в группе (/tmp/tmp.G97ZC4XIsL/roster-duplicate.OM7uYk/students/groups/Ae-21-23:13)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/roster-format.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '1s/$/ extra/' "$BAD/students/groups/Ae-21-23"
+"$APP" --data "$BAD" longest-names
+Ошибка: Ожидался один идентификатор студента в строке (/tmp/tmp.G97ZC4XIsL/roster-format.zl6nAh/students/groups/Ae-21-23:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/roster-surname.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '1s/.*/12345/' "$BAD/students/groups/Ae-21-23"
+"$APP" --data "$BAD" longest-names
+Ошибка: Не удалось выделить фамилию (/tmp/tmp.G97ZC4XIsL/roster-surname.tyWDHN/students/groups/Ae-21-23:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/attendance-format.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '1s/[01]$/x/' "$BAD/Цирковое_Дело/Ae-21-23-attendance"
+"$APP" --data "$BAD" attendance Ae-21-23 'Цирковое_Дело' 1 18
+Ошибка: Посещаемость: ожидается имя и строка из 0 и 1 (/tmp/tmp.G97ZC4XIsL/attendance-format.GlnWz3/Цирковое_Дело/Ae-21-23-attendance:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/attendance-student.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+sed -i '1s/^[^[:space:]]*/UNKNOWN/' "$BAD/Цирковое_Дело/Ae-21-23-attendance"
+"$APP" --data "$BAD" attendance Ae-21-23 'Цирковое_Дело' 1 18
+Ошибка: Студент из посещаемости отсутствует в выбранной группе (/tmp/tmp.G97ZC4XIsL/attendance-student.7avTIX/Цирковое_Дело/Ae-21-23-attendance:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/attendance-duplicate.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+printf '%s\n' "$(head -n 1 "$DATA/Цирковое_Дело/Ae-21-23-attendance")" >> "$BAD/Цирковое_Дело/Ae-21-23-attendance"
+"$APP" --data "$BAD" attendance Ae-21-23 'Цирковое_Дело' 1 18
+Ошибка: Повторная строка посещаемости студента (/tmp/tmp.G97ZC4XIsL/attendance-duplicate.yOT8X5/Цирковое_Дело/Ae-21-23-attendance:13)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/attendance-missing.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+head -n 1 "$DATA/Цирковое_Дело/Ae-21-23-attendance" > "$BAD/Цирковое_Дело/Ae-21-23-attendance"
+"$APP" --data "$BAD" attendance Ae-21-23 'Цирковое_Дело' 1 18
+Ошибка: В посещаемости отсутствует студент ItskovIS (/tmp/tmp.G97ZC4XIsL/attendance-missing.unBqMh/Цирковое_Дело/Ae-21-23-attendance:1)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/attendance-empty.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+: > "$BAD/Цирковое_Дело/Ae-21-23-attendance"
+"$APP" --data "$BAD" attendance Ae-21-23 'Цирковое_Дело' 1 18
+Ошибка: Пустой файл посещаемости (/tmp/tmp.G97ZC4XIsL/attendance-empty.l4gYBR/Цирковое_Дело/Ae-21-23-attendance:0)
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/missing-groups.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+mv "$BAD/students/groups" "$BAD/groups.saved"
+"$APP" --data "$BAD" groups
+Ошибка: Не найден доступный каталог students/groups.
+echo "Код: $?"
+Код: 2
+BAD=$(mktemp -d "$QA/missing-test.XXXXXX")
+cp -a "$DATA/." "$BAD/"
+mv "$BAD/Цирковое_Дело/tests/TEST-4" "$BAD/TEST-4.saved"
+"$APP" --data "$BAD" first-pass 'Цирковое_Дело'
+Ошибка: Файл отсутствует или недоступен для чтения: /tmp/tmp.G97ZC4XIsL/missing-test.Z4jvBQ/Цирковое_Дело/tests/TEST-4
+echo "Код: $?"
+Код: 2
+find "$DATA" -type f -exec sha256sum {} + | LC_ALL=C sort > "$QA/after.sha256"
+diff "$QA/before.sha256" "$QA/after.sha256"
+echo "Код сравнения базы: $?"
+Код сравнения базы: 0
+echo "$QA"
+/tmp/tmp.G97ZC4XIsL
+if (( EUID == 0 )); then
+    echo 'Д01 пропущен: запущено от root.'
+else
+    BAD=$(mktemp -d "$QA/unreadable-test.XXXXXX")
+    cp -a "$DATA/." "$BAD/"
+    chmod 000 "$BAD/Цирковое_Дело/tests/TEST-1"
+    "$APP" --data "$BAD" yearly-best 'Цирковое_Дело' 1
+    echo "Код: $?"
+    chmod 644 "$BAD/Цирковое_Дело/tests/TEST-1"
+fi
+Ошибка: Файл отсутствует или недоступен для чтения: /tmp/tmp.G97ZC4XIsL/unreadable-test.ilzrJp/Цирковое_Дело/tests/TEST-1
+Код: 2
+NO_GAWK=$(mktemp -d "$QA/no-gawk.XXXXXX")
+ln -s "$(command -v bash)" "$NO_GAWK/bash"
+ln -s "$(command -v dirname)" "$NO_GAWK/dirname"
+env PATH="$NO_GAWK" "$APP" --data "$DATA" groups
+Ошибка: Требуется GNU awk (gawk). Установите пакет gawk.
+echo "Код: $?"
+Код: 2
